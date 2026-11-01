@@ -1,0 +1,10 @@
+$kind: collection
+variables:
+  base_url: http://localhost:8080
+  saldo_voor_overboeken: ""
+  benodigd_bedrag: ""
+  ontvanger_naam: ""
+  aantal_transacties_voor: ""
+  accountName: ""
+  naam_voor_aanpassen: ""
+  nieuwe_naam: ""

@@ -1,0 +1,40 @@
+$kind: http-request
+name: Controlleer resultaat
+url: http://localhost:8080/api/v1/transactions/1
+method: GET
+body:
+  type: json
+  content: "{\r
+
+    \  \"senderAccountId\": 1,\r
+
+    \  \"receiverAccountId\": 2,\r
+
+    \  \"description\": \"zakgeld\",\r
+
+    \  \"amount\": 100,\r
+
+    \  \"currency\": \"USD\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Verwachting: Status code is 200 OK\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      const laatste = pm.response.json().transactions[0]; // nieuwste transactie\r
+
+      \r
+
+      pm.test(\"Transactie is niet aangemaakt; test is succesvol!\", function () {\r
+
+      \    pm.expect(laatste.amount).to.not.eql(100);\r
+
+      });"
+    language: text/javascript
+order: 3805418693715525
