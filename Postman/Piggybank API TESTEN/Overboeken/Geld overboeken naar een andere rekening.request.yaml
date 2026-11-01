@@ -1,0 +1,47 @@
+$kind: http-request
+url: http://localhost:8080/api/v1/transactions
+method: POST
+body:
+  type: json
+  content: |-
+    {
+      "senderAccountId": 1,
+      "receiverAccountId": 3,
+      "description": "Zakgeld",
+      "amount": 25,
+      "currency": "USD"
+    }
+scripts:
+  - type: beforeRequest
+    code: "// Haal het saldo van de verzender op (accountId = 1)\r
+
+      pm.sendRequest({\r
+
+      \    url: pm.collectionVariables.get('base_url') + '/api/v1/accounts/1',\r
+
+      \    method: 'GET'\r
+
+      }, function(err, response) {\r
+
+      \    if (!err) {\r
+
+      \        const saldo = response.json().balance;\r
+
+      \        pm.collectionVariables.set('saldo_voor_overboeken', saldo);\r
+
+      \    }\r
+
+      });"
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test("Verwachting: Status code is 200 OK", function () {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Verzender heeft meer dan $0 op hun rekening", function () {
+          const saldo = parseFloat(pm.collectionVariables.get('saldo_voor_overboeken'));
+          pm.expect(saldo).to.be.above(0);
+      });
+    language: text/javascript
+order: 3184349869508317

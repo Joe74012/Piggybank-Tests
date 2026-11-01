@@ -1,0 +1,40 @@
+$kind: http-request
+name: Controlleer resultaat
+url: http://localhost:8080/api/v1/accounts/1
+method: GET
+body:
+  type: json
+  content: "{\r
+
+    \  \"id\": 1,\r
+
+    \  \"name\": \"$!@#%^&*\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Verwachting: Status code is 200 OK\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      const naamVoor = pm.collectionVariables.get('naam_voor_aanpassen');\r
+
+      const nieuweNaam = pm.collectionVariables.get('nieuwe_naam');\r
+
+      const naamNa = pm.response.json().name;\r
+
+      \r
+
+      pm.test(\"Accountnaam is niet aangepast\", function () {\r
+
+      \    pm.expect(naamNa).to.eql(naamVoor);\r
+
+      \    pm.expect(naamNa).to.not.eql(nieuweNaam);\r
+
+      });"
+    language: text/javascript
+order: 4441029097295382

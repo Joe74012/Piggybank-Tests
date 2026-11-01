@@ -1,0 +1,49 @@
+$kind: http-request
+url: http://localhost:8080/api/v1/transactions
+method: POST
+body:
+  type: json
+  content: |-
+    {
+      "senderAccountId": 2,
+      "receiverAccountId": 1,
+      "description": "zakgeld",
+      "amount": "@",
+      "currency": "USD"
+    }
+scripts:
+  - type: beforeRequest
+    code: "// Haal het saldo van de verzender op (accountId = 2)\r
+
+      pm.sendRequest({\r
+
+      \    url: pm.collectionVariables.get('base_url') + '/api/v1/accounts/2',\r
+
+      \    method: 'GET'\r
+
+      }, function(err, response) {\r
+
+      \    if (!err) {\r
+
+      \        const saldo = response.json().balance;\r
+
+      \        pm.collectionVariables.set('saldo_voor_overboeken', saldo);\r
+
+      \    }\r
+
+      });"
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test("Verwachting: Status code is 400 Bad request", function () {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("Geld verstuur veld is gelijk aan een speciaal teken (bijv. @)", function () {
+          const body = JSON.parse(pm.request.body.raw);
+          pm.expect(String(body.amount)).to.equal("@");
+
+      });
+    language: text/javascript
+examples: .resources/Geld overboeken met een teken.resources/examples
+order: 4398250980986314

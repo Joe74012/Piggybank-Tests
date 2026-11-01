@@ -1,0 +1,31 @@
+$kind: http-request
+url: http://localhost:8080/api/v1/transactions/1
+method: GET
+body:
+  type: json
+  content: "{\r
+
+    \  \"senderAccountId\": 1,\r
+
+    \  \"receiverAccountId\": 3,\r
+
+    \  \"description\": \"Zakgeld\",\r
+
+    \  \"amount\": 25,\r
+
+    \  \"currency\": \"USD\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "const laatste = pm.response.json().transactions[0]; // nieuwste transactie\r
+
+      \r
+
+      pm.test(\"Transactie is aangemaakt; test is succesvol!\", function () {\r
+
+      \    pm.expect(laatste.amount).to.eql(-25);\r
+
+      });"
+    language: text/javascript
+order: 3247729402490309

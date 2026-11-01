@@ -1,0 +1,42 @@
+$kind: http-request
+name: Rekenings naam van gebruiker aanpassen naar een speciaal teken
+url: http://localhost:8080/api/v1/accounts
+method: PUT
+body:
+  type: json
+  content: |-
+    {
+      "id": 1,
+      "name": "$!@#%^&*"
+    }
+scripts:
+  - type: beforeRequest
+    code: "pm.sendRequest({\r
+
+      \    url: pm.collectionVariables.get('base_url') + '/api/v1/accounts/1',\r
+
+      \    method: 'GET'\r
+
+      }, function (err, response) {\r
+
+      \    if (!err) {\r
+
+      \        pm.collectionVariables.set('naam_voor_aanpassen',
+      response.json().name);\r
+
+      \    }\r
+
+      });"
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test("Verwachting: Status code is 401 Unauthorized", function () {
+          pm.response.to.have.status(401);
+      });
+
+      // Nieuwe naam bewaren voor de controle in de GET
+      pm.collectionVariables.set('nieuwe_naam', JSON.parse(pm.request.body.raw).name);
+    language: text/javascript
+examples: .resources/Rekenings naam van gebruiker aanpassen naar een speciaal
+  teken-1.resources/examples
+order: 4034791520906232

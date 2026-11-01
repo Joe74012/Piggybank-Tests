@@ -1,0 +1,11 @@
+$kind: http-request
+url: ""
+method: GET
+body:
+  type: json
+  content: //Kon geen endpoint vinden dus kan geen body meesturen.😢
+scripts:
+  - type: afterResponse
+    code: //Kon geen endpoint vinden dus kan geen script meesturen. 😔
+    language: text/javascript
+order: 3247729402490309

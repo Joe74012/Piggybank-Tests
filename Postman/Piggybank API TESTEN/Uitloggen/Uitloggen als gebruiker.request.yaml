@@ -1,0 +1,15 @@
+$kind: http-request
+url: ""
+method: POST
+body:
+  type: json
+  content: //Kon geen endpoint vinden dus kan geen body meesturen.😢
+scripts:
+  - type: beforeRequest
+    code: //Kon geen endpoint vinden dus kan geen script meesturen. 😔
+    language: text/javascript
+  - type: afterResponse
+    code: //Kon geen endpoint vinden dus kan geen script meesturen. 😔
+    language: text/javascript
+examples: .resources/Uitloggen als gebruiker.resources/examples
+order: 3184349869508317
